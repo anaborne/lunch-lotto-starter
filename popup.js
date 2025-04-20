@@ -1,12 +1,22 @@
-const apiKey = "YOUR_API_KEY";
+const apiKey = "AIzaSyDoX76N8-a0AKUcSuIDoOlEiw_w0ydS2xM";
 const defaultSettings = {
   distance: 0.5,       // Default search radius in miles
   price: "2,3",        // Google Places API uses 1-4 ($ - $$$$)
   dietary: "",         // Empty means no filter (future: vegetarian, gluten-free, etc.)
 };
+
 // Convert miles to meters (Google Maps API uses meters)
 function milesToMeters(miles) {
   return miles * 1609.34;
+}
+
+function addToHistory(restaurant) {
+  const history = JSON.parse(localStorage.getItem('restaurantHistory')) || [];
+  history.push({
+    name: restaurant.name,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem('restaurantHistory', JSON.stringify(history));
 }
 
 // Load user settings or use defaults
@@ -27,9 +37,12 @@ async function fetchRestaurants() {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude: lat, longitude: lng } = position.coords;
         const settings = await loadSettings();
-  
+        
         const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${milesToMeters(settings.distance)}&type=restaurant&keyword=healthy&minprice=${settings.price[0]}&maxprice=${settings.price[2]}&key=${apiKey}`;
-  
+
+        // test url
+        // const url = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${lat},${lng}&radius=${milesToMeters(settings.distance)}&type=restaurant&minprice=${settings.price[0]}&maxprice=${settings.price[2]}&key=${apiKey}`;
+
         const response = await fetch(url);
         const data = await response.json();
   
@@ -73,6 +86,7 @@ async function fetchRestaurants() {
           document.getElementById("loading-gif").style.display = "none"; // ✅ Hide Loading GIF
           document.getElementById("wheel").style.display = "block"; // ✅ Show the wheel
           updateWheel(restaurants); // ✅ Update the wheel with restaurant names
+          addToHistory(selectedRestaurants[0]);
         }, 2000);
   
       }, (error) => {
@@ -118,6 +132,19 @@ async function fetchRestaurants() {
     drawWheel();
   }  
 
+  function displayHistory() {
+    const historyList = document.getElementById("history-list");
+    if (!historyList) return;
+
+    const history = JSON.parse(localStorage.getItem('restaurantHistory')) || [];
+    historyList.innerHTML = '';
+    history.slice(-5).reverse().forEach(entry => {
+      const li = document.createElement("li");
+      li.textContent = `${entry.name} (${entry.time})`;
+      historyList.appendChild(li);
+    });
+  }
+
 // 🛠️ Toggle Settings View
 function showSettings() {
   document.getElementById("main-view").style.display = "none";
@@ -127,6 +154,17 @@ function showSettings() {
 function hideSettings() {
   document.getElementById("main-view").style.display = "block";
   document.getElementById("settings-view").style.display = "none";
+}
+
+function showHistory() {
+  document.getElementById("main-view").style.display = "none";
+  document.getElementById("history-view").style.display = "block";
+  displayHistory();
+}
+
+function hideHistory() {
+  document.getElementById("history-view").style.display = "none";
+  document.getElementById("main-view").style.display = "block";
 }
 
 // Ensure scripts run only after DOM is loaded
@@ -141,6 +179,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Close settings view
   document.getElementById("close-settings").addEventListener("click", hideSettings);
+
+  // Open history view
+  document.getElementById("open-history").addEventListener("click", showHistory);
+  document.getElementById("close-history").addEventListener("click", hideHistory);
 
   // Load saved settings into inputs
   const settings = await loadSettings();
