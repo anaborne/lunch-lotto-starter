@@ -159,6 +159,19 @@ function truncateOption(option) {
       const normalizedDegrees = degrees % 360;
       const selectedIndex = Math.floor(normalizedDegrees / (360 / options.length));
       const selectedOption = options[options.length - 1 - selectedIndex];
+
+      if (selectedOption) {
+        const restaurantHistory = JSON.parse(localStorage.getItem("restaurantHistory")) || [];
+        restaurantHistory.push({
+          name: selectedOption.name,
+          time: new Date().toLocaleString()
+        });
+        localStorage.setItem("restaurantHistory", JSON.stringify(restaurantHistory));
+
+        if (typeof displayHistory === "function") {
+          displayHistory();
+        }
+      }
         
       // Motivational messages to encourage the user
       const messages = [
