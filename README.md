@@ -1,83 +1,25 @@
-# CIS 3500: Lunch Lotto Starter
+## ✨ Implemented Features
 
-## Overview
-This assignment involves enhancing a Chrome extension developed by one of the Top 3 winners of the MCIT hackathon. The project provides hands-on experience in web development, API integration, and collaborative coding.
+### 1. 🗂️ Restaurant History Log with Page Navigation
 
-**Original project:** [Lunch Lotto](https://github.com/jessie-sr/lunch-lotto)
+A new history tracking feature was added that allows users to save and view previously selected restaurants. After spinning the wheel, users can choose to log their final selection by clicking a **"Select This Restaurant"** button. Only selected restaurants are added to the history for clarity and intentional logging.
 
-## Project Description
-Lunch Lotto is a Chrome extension that helps users decide where to eat by randomly selecting nearby restaurants. Your task is to enhance this extension by implementing new features.
+Users can access a dedicated **History Page** within the popup UI by clicking the **"History"** button. This view lists the last 5 selected restaurants along with timestamps, offering a simple way to track past decisions.
 
-## Enhancement Options
-Choose one of the following enhancements to implement:
-
-1. **History Feature**: Maintain a log of all restaurants chosen by the user.
-2. **Alternative API Integration**: Replace Google Maps API with another restaurant data provider.
-3. **Progress Indicator**: Add a progress bar to indicate the status of API calls.
-4. **Custom Feature**: Propose a unique feature (requires instructor/TA approval).
-
-## Getting Started
-
-### Step 1: Team Organization
-- Assign a team member as the **Product Manager (PM)** for Lunch Lotto.
-- Ensure this PM is different from the one assigned to the Nara project.
-
-### Step 2: Repository Setup
-The PM should fork the repository:
-1. Navigate to the `lunch-lotto-starter` repository on GitHub.
-2. Click the **Fork** button to create a copy under their account.
-
-### Step 3: Cloning the Repository
-Once the PM has forked the repository, team members should clone it locally:
-```sh
-git clone https://github.com/<PM-username>/lunch-lotto-starter.git
-```
-
-### Step 4: Development Workflow
-1. Open the project in a text editor (e.g., **Visual Studio Code** recommended).
-2. Make changes to the codebase.
-3. Use the following commands to commit and push your changes:
-
-```sh
-git add .
-git commit -m "feat: [feature name] added"
-git push
-```
-
-4. As team members contribute, collaborate using **Pull Requests (PRs)** on GitHub.
-5. Regularly sync your local repository with the latest changes:
-
-```sh
-git pull
-```
-
-6. Resolve merge conflicts as needed and ensure smooth integration.
-
-## Submission
-- Submit the final version of your project as per website guidelines.
-- Include a brief write-up of your implemented features and any challenges faced.
-
-## Setup Google Maps API Key
-
-### Replace the Google Maps API Key:
-
-1. Open the popup.js file in a code editor (e.g., VS Code).
-2. Find the line containing:
-   ```js
-   const apiKey = "YOUR_API_KEY";
-   ```
-3. Replace "YOUR_API_KEY" with your own Google Maps API Key.
-   Example:
-   ```js
-   const apiKey = "AIzaSy12345EXAMPLE";
-   ```
-
-### If you don't have a Google Maps API Key yet:
-
-1. Go to the Google Cloud Console.
-2. Create or select a project.
-3. Navigate to APIs & Services > Credentials and click Create Credentials.
-4. Select API Key, copy the generated key, and replace the placeholder in popup.js.
+**Highlights:**
+- Dedicated History page view within the popup.
+- "Select" button ensures only intentional choices are saved.
+- Persistent data storage using `localStorage`.
 
 ---
-Happy coding, and good luck with Lunch Lotto! 🍀
+
+### 2. ⏳ Progress Indicator (Animated Loading Bar)
+
+An animated **progress bar** has been integrated at the top of the popup interface to improve user feedback during restaurant data fetching. When the user opens the extension or updates settings, the progress bar animates from 0% to 100% as the API call progresses.
+
+This progress indicator provides a responsive feel, communicates that data is being fetched in the background, and disappears smoothly once the process is complete or if an error occurs.
+
+**Highlights:**
+- Thin, elegant loading bar displayed during API calls.
+- Smooth animation with `setInterval` logic.
+- Handles completion and error states gracefully.
