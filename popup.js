@@ -33,6 +33,21 @@ async function fetchRestaurants() {
       // 🔄 Show Loading GIF and Hide the Wheel
       document.getElementById("loading-gif").style.display = "block";
       document.getElementById("wheel").style.display = "none";
+
+      const progressBar = document.getElementById("progress-bar");
+      const progressContainer = document.getElementById("progress-container");
+      progressContainer.style.display = "block";
+      progressBar.style.width = "0%";
+
+      let progress = 0;
+      const interval = setInterval(() => {
+        if (progress < 90) {
+          progress += 5;
+          progressBar.style.width = `${progress}%`;
+        } else {
+          clearInterval(interval);
+        }
+      }, 200);
   
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude: lat, longitude: lng } = position.coords;
@@ -83,20 +98,31 @@ async function fetchRestaurants() {
   
         // ⏳ Wait 5 seconds before showing the wheel
         setTimeout(() => {
+          clearInterval(interval);
+          progressBar.style.width = "100%";
+          setTimeout(() => {
+            progressContainer.style.display = "none";
+            progressBar.style.width = "0%";
+          }, 500);
           document.getElementById("loading-gif").style.display = "none"; // ✅ Hide Loading GIF
           document.getElementById("wheel").style.display = "block"; // ✅ Show the wheel
-          updateWheel(restaurants); // ✅ Update the wheel with restaurant names
-          addToHistory(selectedRestaurants[0]);
+          updateWheel(restaurants); // ✅ Update the wheel with restaurant namesgit 
         }, 2000);
   
       }, (error) => {
         console.error("❌ Geolocation error:", error);
         alert("Please enable location access to fetch restaurants.");
+        clearInterval(interval);
+        progressContainer.style.display = "none";
+        progressBar.style.width = "0%";
         document.getElementById("loading-gif").style.display = "none"; // ✅ Hide loading GIF on error
         document.getElementById("wheel").style.display = "block";
       });
     } catch (error) {
       console.error("❌ Error fetching restaurants:", error);
+      clearInterval(interval);
+      progressContainer.style.display = "none";
+      progressBar.style.width = "0%";
       document.getElementById("loading-gif").style.display = "none"; // ✅ Hide loading GIF on error
       document.getElementById("wheel").style.display = "block";
     }
